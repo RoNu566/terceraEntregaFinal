@@ -40,7 +40,7 @@ export const DeleteProductFromCartController = async (req, res) => {
     try {
         const { cid, pid } = req.params;
         await cartManager.deletProdfromCart(cid, pid);
-        res.send({ status: "success", payload: "Seelimino el producto del carrito" })
+        res.send({ status: "success", payload: "Se elimino el producto del carrito" })
     } catch (err) {
         res.send({ status: "failed", payload: "No se pudo eliminar el producto del carrito" })
     }
@@ -56,3 +56,7 @@ export const DeleteCartController = async (req, res) => {
     }
 
 }
+
+
+
+
