@@ -33,7 +33,7 @@ export const ChatController = async (req, res) => {
 export const LoginViewController = async (req, res) => {
     console.log(req.session)
     const data = req.session;
-    res.render("login", { data })
+    res.render("login", { data, section: "login" })
 }
 
 export const ProfileViewController = async (req, res) => {

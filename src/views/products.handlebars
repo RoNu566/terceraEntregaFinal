@@ -5,22 +5,32 @@
         <button type="submit">Log-out!</button>
         </form>
     </div>
-<ul>
-    {{#each products.docs}}
-    <li>
-        <p>Id: {{id}}</p>
-        <p>Title: {{title}}</p>
-        <p>Descripción: {{description}}</p>
-        <p>Price: {{price}}</p>
-        <p>Img: {{thumbnail}}</p>
-        <p>Code: {{code}}</p>
-        <p>Stock: {{stock}}</p>
-        <p>Categoría: {{category}}</p>
-        <p>Status: {{status}}</p><br>
-        <button>Agregar al carrito</button>
-    </li>
-    {{/each}}
-</ul>
+    <ul>
+        {{#each products.docs}}
+        <li>
+            <p>Id: {{id}}</p>
+            <p>Title: {{title}}</p>
+            <p>Descripción: {{description}}</p>
+            <p>Price: {{price}}</p>
+            <p>Img: {{thumbnail}}</p>
+            <p>Code: {{code}}</p>
+            <p>Stock: {{stock}}</p>
+            <p>Categoría: {{category}}</p>
+            <p>Status: {{status}}</p><br>
+            <div>
+                {{#if ../data.cartid}}
+                <form method="post" action="api/carts/{{../data.cartid}}/product/{{id}}">
+                <button>Agregar al carrito</button>
+                </form>
+                {{else}}
+                <form method="post" action="api/carts/sincarrito">
+                <button>Agregar al carrito</button>
+                </form>
+                {{/if}}
+            </div>
+        </li>
+        {{/each}}
+    </ul>
 </div>
 <div>
 {{#if products.hasPrevPage}}

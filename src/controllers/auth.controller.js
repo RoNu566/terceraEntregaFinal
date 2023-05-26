@@ -10,6 +10,7 @@ export const SignupRedirectController = (req, res) => {
     req.session.user = req.user.name
     req.session.email = req.user.email
     req.session.rol = req.user.rol
+    req.session.cartid = req.user.cart[0]._id.toString()
     console.log(req.session)
     res.send(`Usuario registrado exitosamente! Ingresa a tu pérfil haciendo click <a href="/profile">Aquí</a>`)
 }
@@ -40,7 +41,9 @@ export const LoginController = async (req, res) => {
             req.session.user = user.name;
             req.session.email = user.email;
             req.session.rol = user.rol;
+            req.session.cartid = user.cart[0]._id.toString();
             console.log("usuario registrado")
+            console.log("user data", req.session)
             res.redirect("/products")
         } else {
             res.send("Usuario y/o contraseña incorrecto")
