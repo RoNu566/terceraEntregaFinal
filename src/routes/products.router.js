@@ -1,5 +1,6 @@
 import { json, Router } from "express";
 import { GetProductsController, GetProductbyIDController, AddProductController, UpdateProductController, DeleteProductByIdController } from "../controllers/products.controller.js";
+import { verifyRole } from "../middlewares/auth.roles.js";
 
 const productsRouter = Router()
 productsRouter.use(json())
@@ -11,13 +12,13 @@ productsRouter.get("/", GetProductsController);
 productsRouter.get("/:pid", GetProductbyIDController);
 
 //Ruta para Aagregar productos//
-productsRouter.post("/", AddProductController);
+productsRouter.post("/", verifyRole(["admin"]), AddProductController);
 
 //Ruta para actualizar productos//
-productsRouter.put("/:pid", UpdateProductController)
+productsRouter.put("/:pid", verifyRole(["admin"]), UpdateProductController)
 
 //Ruta para eliminar productos por id//
-productsRouter.delete("/:pid", DeleteProductByIdController)
+productsRouter.delete("/:pid", verifyRole(["admin"]), DeleteProductByIdController)
 
 export default productsRouter;
 

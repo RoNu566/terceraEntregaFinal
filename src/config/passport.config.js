@@ -3,7 +3,7 @@ import localStrategy from "passport-local";
 import usersModel from "../dao/models/users.model.js";
 import { hashPassword, validatePassword } from "../utils.js";
 import GithubStrategy from "passport-github2";
-import { CartManager } from "../dao/index.js";
+import { CartManager } from "./persistance.js";
 
 const cartToWork = new CartManager;
 

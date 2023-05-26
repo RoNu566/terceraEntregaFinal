@@ -8,14 +8,6 @@ class ProductManager {
     console.log("Working on DB")
   }
 
-  // async getProducts() {
-  //   try {
-  //     const products = await productModel.find().lean();
-  //     return products
-  //   } catch (error) {
-  //     return [];
-  //   }
-  // }
 
   async getProducts(limit, page, sort) {
     let limitIn = limit ? limit : 10;

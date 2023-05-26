@@ -1,4 +1,4 @@
-import cartModel from "../models/cart.models.js";
+import cartModel from "../models/cart.models.js"
 
 class CartManager {
 
@@ -15,7 +15,7 @@ class CartManager {
     }
   }
 
-  async addCart(products) {
+  async addCart() {
     try {
       const newCart = { products: [] }
       const result = await cartModel.create(newCart)
@@ -33,23 +33,20 @@ class CartManager {
     }
   }
 
-  async addProductToCart(cid, product) {
+  async addProductToCart(cid, pid) {
     try {
-      const cart = await cartModel.findById(cid);
-      const prod = cart.products.find(arr => arr._id == product._id)
-      if (prod) {
-        prod.quantity++;
-        await cart.save();
-        await cart.populate("products.product").lean()
+      const cart = await cartModel.findById(cid).populate("products.product");
+      const prodIndex = cart.products.findIndex(prod => prod.product._id.toString() === pid)
+      if (prodIndex >= 0) {
+        cart.products[prodIndex].quantity = cart.products[prodIndex].quantity + 1,
+          await cart.save();
       } else {
-        cart.products.push({ IdProduct: product._id, quantity: 1 })
+        cart.products.push({ product: pid, quantity: 1 })
         await cart.save()
-        await await cart.populate("products.product").lean()
       }
     } catch (error) {
       throw new Error;
     }
-
   }
 
   async deleteCar(cid) {

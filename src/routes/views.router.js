@@ -1,5 +1,7 @@
 import { json, Router } from "express";
 import { HomeViewController, RealTimeProdController, ProductViewController, ChatController, LoginViewController, ProfileViewController, SignInViewController, ForgotViewController } from "../controllers/views.controller.js";
+import { verifyRole } from "../middlewares/auth.roles.js";
+
 const viewsRouter = Router()
 viewsRouter.use(json())
 
@@ -13,8 +15,7 @@ viewsRouter.get("/real-time-products", RealTimeProdController);
 viewsRouter.get("/products", ProductViewController);
 
 //Ruta Render Chat//
-viewsRouter.get("/chat", ChatController);
-
+viewsRouter.get("/chat", verifyRole(["user"]), ChatController);
 
 //Ruta Render Login//
 viewsRouter.get("/login", LoginViewController);

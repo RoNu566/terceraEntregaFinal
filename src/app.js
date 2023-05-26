@@ -4,7 +4,6 @@ import { engine } from "express-handlebars";
 import { __dirname } from "./utils.js";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
-import mongoose from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import path from "path";
@@ -94,7 +93,5 @@ app.use("/signIn", viewsRouter);
 app.use("/api/session", authRouter);
 
 //-----Moongose-----//
-mongoose.connect(options.mongoDB.URL).then((conn) => {
-  console.log("Conected to Db")
-});
+// Conexión a Moongose en tipo de persistencia//
 

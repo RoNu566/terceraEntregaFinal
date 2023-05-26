@@ -12,6 +12,7 @@ export const options = {
     server: {
         port: process.env.PORT,
         secretSession: process.env.SECRET_KEY,
+        persistance: process.env.PERSISTANCE
     }
 };
 
