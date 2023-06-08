@@ -1,4 +1,13 @@
 #login{
-background-color: blue;
+background-image:url(https://firebasestorage.googleapis.com/v0/b/viene-y-va-8a6ba.appspot.com/o/logoSHDS.png?alt=media&token=2f8ba4ca-5c50-4e09-9160-2e39fcada1fa);
+background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  
 }
-
+.form{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
