@@ -1,6 +1,7 @@
 import { json, Router } from "express";
-import { HomeViewController, RealTimeProdController, ProductViewController, ChatController, LoginViewController, ProfileViewController, SignInViewController, ForgotViewController } from "../controllers/views.controller.js";
+import { HomeViewController, RealTimeProdController, ProductViewController, ChatController, LoginViewController, ProfileViewController, SignInViewController, ForgotViewController, loggerViewController } from "../controllers/views.controller.js";
 import { verifyRole } from "../middlewares/auth.roles.js";
+import compression from "express-compression";
 
 const viewsRouter = Router()
 viewsRouter.use(json())
@@ -12,7 +13,7 @@ viewsRouter.get("/", HomeViewController);
 viewsRouter.get("/real-time-products", RealTimeProdController);
 
 //Ruta Render Product//
-viewsRouter.get("/products", ProductViewController);
+viewsRouter.get("/products", compression({ brotli: { enable: true, zlib: {} } }), ProductViewController);
 
 //Ruta Render Chat//
 viewsRouter.get("/chat", verifyRole(["user"]), ChatController);
@@ -28,5 +29,7 @@ viewsRouter.get("/signIn", SignInViewController);
 
 //Ruta Render Forgot//
 viewsRouter.get("/forgot", ForgotViewController);
+
+viewsRouter.get("/loggerTest", loggerViewController)
 
 export default viewsRouter;

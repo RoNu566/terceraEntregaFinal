@@ -1,13 +1,17 @@
 import { ProductManager } from "../config/persistance.js"
+import { ProductErrorFunction } from "../services/errorFunction.js";
+import { Logger2 } from "../Logger/logger.js";
 
 const manager = new ProductManager();
-
+const logger = Logger2()
 export const GetProductsController = async (req, res) => {
     try {
         const { limit, page, sort } = req.params;
         const products = await manager.getProducts(limit, page, sort);
         res.send({ status: "success", payload: products });
     } catch (err) {
+        logger.fatal("No se pudo obtener la lista de productos")
+        ProductErrorFunction();
         res.status(404).send("No se pudo obtener la lista de productos")
     }
 }
@@ -36,6 +40,7 @@ export const AddProductController = async (req, res) => {
         req.io.emit("new-product", result);
         res.status(201).send("Producto agregado!!");
     } catch (e) {
+        logger.error(`No se pudo agregar el producto`)
         res.status(404).send(`No se pudo agregar el producto`);
     }
 }
@@ -50,6 +55,7 @@ export const UpdateProductController = async (req, res) => {
         req.io.emit("update-product", products)
         res.status(201).send(await manager.getProductById(id))
     } catch (err) {
+        logger.error(`No se pudo actualizar el producto`)
         res.status(404).send("No se pudo actualizar el producto")
     }
 }

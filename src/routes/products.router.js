@@ -1,12 +1,13 @@
 import { json, Router } from "express";
 import { GetProductsController, GetProductbyIDController, AddProductController, UpdateProductController, DeleteProductByIdController } from "../controllers/products.controller.js";
 import { verifyRole } from "../middlewares/auth.roles.js";
+import compression from "express-compression";
 
 const productsRouter = Router()
 productsRouter.use(json())
 
 //Ruta para obtener productos//
-productsRouter.get("/", GetProductsController);
+productsRouter.get("/", compression({ brotli: { enable: true, zlib: {} } }), GetProductsController);
 
 //Ruta para obtener productos por ID//
 productsRouter.get("/:pid", GetProductbyIDController);

@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import path from "path";
+import { errorHandler } from "./middlewares/errorHandler.js";
+import { addLogger } from "./Logger/logger.js";
 //Routers//
 import productsRouter from "./routes/products.router.js";
 import cartRouter from "./routes/cart.router.js";
@@ -91,7 +93,8 @@ app.use("/login", viewsRouter);
 app.use("/profile", viewsRouter);
 app.use("/signIn", viewsRouter);
 app.use("/api/session", authRouter);
-
+app.use(errorHandler)
+app.use(addLogger)
 //-----Moongose-----//
 // Conexión a Moongose en tipo de persistencia//
 

@@ -2,12 +2,13 @@ import { Router, json } from "express";
 import { GetCartController, CreateCartController, GetCartByIdController, AddProductToCartController, DeleteProductFromCartController, DeleteCartController, Purchase } from "../controllers/cart.controller.js";
 import { verifyRole } from "../middlewares/auth.roles.js";
 import { LoginViewController } from "../controllers/views.controller.js";
+import compression from "express-compression";
 
 const cartRouter = Router();
 cartRouter.use(json())
 
 //Ruta para obtener Carritos//
-cartRouter.get("/", GetCartController);
+cartRouter.get("/", compression({ brotli: { enable: true, zlib: {} } }), GetCartController);
 
 //Ruta para crear Carritos//
 cartRouter.post("/", CreateCartController);

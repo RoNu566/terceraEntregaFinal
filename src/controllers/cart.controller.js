@@ -1,13 +1,21 @@
 import { CartManager } from "../config/persistance.js"
 import { manager } from "../controllers/products.controller.js"
 import TicketManager from "../dao/db-managers/ticket.manager.js";
+import { CartNotFoundErrorFunction } from "../services/errorFunction.js";
+import { Logger2 } from "../Logger/logger.js";
 
 const cartManager = new CartManager();
 const ticketManager = new TicketManager();
+const logger = Logger2()
 
 export const GetCartController = async (req, res) => {
-    let carrito = await cartManager.getCart();
-    res.send(carrito);
+    try {
+        let carrito = await cartManager.getCart();
+        res.send(carrito);
+    } catch (error) {
+        // logger.info("No se pudieron recuperar los carritos")
+        CartNotFoundErrorFunction();
+    }
 }
 
 export const CreateCartController = async (req, res) => {
@@ -29,8 +37,10 @@ export const AddProductToCartController = async (req, res) => {
     const { cid, pid } = req.params;
     try {
         await cartManager.addProductToCart(cid, pid);
+        logger.info(`Producto ${pid} agregado al carrito ${cid}`)
         res.status(201).send(`Producto ${pid} agregado al carrito ${cid}`);
     } catch (error) {
+        logger.error(`No se pudo agregar producto al carrito`)
         res.status(404).send("No se pudo agregar producto al carrito")
     }
 }
@@ -81,10 +91,12 @@ export const Purchase = async (req, res) => {
                 console.log("ticketProducts", ticketProducts)
             }
             const NewTicket = await ticketManager.newTicket(ticketProducts, req.session.email.toString())
-            console.log("ticketfinal", NewTicket)
+            logger.info(`Ticket Final: ${NewTicket}`)
+            // console.log("ticketfinal", NewTicket)
             res.send(NewTicket)
         }
     } catch (err) {
+        logger.info(`No se pudo realizar la compra`)
         res.send({ status: "Error", payload: "No se pudo realizar la compra" })
     }
 }

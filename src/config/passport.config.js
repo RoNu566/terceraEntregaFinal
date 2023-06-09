@@ -4,6 +4,7 @@ import usersModel from "../dao/models/users.model.js";
 import { hashPassword, validatePassword } from "../utils.js";
 import GithubStrategy from "passport-github2";
 import { CartManager } from "./persistance.js";
+import { CreateUserErrorFunction } from "../services/errorFunction.js";
 
 const cartToWork = new CartManager;
 
@@ -16,6 +17,9 @@ const initializedPassport = () => {
         async (req, username, password, done) => {
             try {
                 const { name, last_name, age } = req.body;
+                if (!name || !last_name || !age) {
+                    CreateUserErrorFunction(req.body)
+                }
                 const user = await usersModel.findOne({ email: username });
                 if (user) {
                     return done(null, false)
