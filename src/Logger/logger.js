@@ -67,12 +67,12 @@ export const addLogger = (req, res, next) => {
     } else {
         req.logger = prodLogger;
     }
-    req.logger.fatal(`level fatal`)
-    req.logger.error(`level error`)
-    req.logger.warning(`level warning`)
-    req.logger.info(`level info`)
-    req.logger.http(`level http`)
-    req.logger.debug(`level debug`)
+    // req.logger.fatal(`level fatal`)
+    // req.logger.error(`level error`)
+    // req.logger.warning(`level warning`)
+    // req.logger.info(`level info`)
+    // req.logger.http(`level http`)
+    // req.logger.debug(`level debug`)
     next();
 
 }

@@ -1,8 +1,9 @@
 import usersModel from "../dao/models/users.model.js";
-import { hashPassword, validatePassword } from "../utils.js";
+import { hashPassword, validatePassword, emailToken, verifyToken } from "../utils.js";
 import passport from "passport";
 import { LoginErrorFunction, PasswordErrorFunction } from "../services/errorFunction.js";
 import { Logger2 } from "../Logger/logger.js";
+import { sendRecoveryPass } from "../config/email.js";
 
 const logger = Logger2()
 
@@ -11,7 +12,8 @@ export const PassportSignUpController = passport.authenticate("singupStrategy", 
 })
 
 export const SignupRedirectController = (req, res) => {
-    req.session.user = req.user.name
+    req.session.user = req.user.name;
+    req.session._id = req.user._id;
     req.session.email = req.user.email
     req.session.rol = req.user.rol
     req.session.cartid = req.user.cart[0]._id.toString()
@@ -48,6 +50,7 @@ export const LoginController = async (req, res) => {
             res.send(`No existe ese usuario, por favor registrate en nuestro sitio haciendo click <a href="/signIn">Aquí</a>`);
         } else if (email === user.email && validatePassword(user, password)) {
             req.session.user = user.name;
+            req.session._id = user._id;
             req.session.email = user.email;
             req.session.rol = user.rol;
             req.session.cartid = user.cart[0]._id.toString();
@@ -83,16 +86,45 @@ export const LogoutController = (req, res) => {
 
 export const ForgotController = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const user = await usersModel.findOne({ email: email });
-        if (user) {
-            user.password = hashPassword(password);
-            const userUpdate = await usersModel.findOneAndUpdate({ email: user.email }, user);
-            res.send("Su contraseña ha sido reestablecida")
+        const token = req.query.token
+        const { email, newpassword } = req.body;
+        const validEmail = verifyToken(token)
+        if (!validEmail) {
+            return res.send(`El enlace ya no es valido. Intentalo nuevamente haciendo click <a href="/resendpass">aquí</a>`)
         } else {
-            req.send("Usuario no registrado")
+            if (!email) {
+                logger.error("Falta email")
+            }
+            const user = await usersModel.findOne({ email: email });
+            if (validatePassword(user, newpassword)) {
+                return res.send("No puedes repetir la contraseña")
+            }
+            if (user) {
+                user.password = hashPassword(newpassword);
+                await usersModel.findOneAndUpdate({ email: user.email }, user);
+                res.send("Su contraseña ha sido restablecida")
+            } else {
+                req.send("Usuario no registrado")
+            }
         }
     } catch (error) {
         res.send("No se pudo restaurar la contraseña")
+    }
+}
+
+export const resendPassController = async (req, res) => {
+    try {
+        const { email } = req.body
+        const user = await usersModel.findOne({ email: email })
+        if (user) {
+            const token = emailToken(email, 240);
+            await sendRecoveryPass(email, token)
+            res.send(`Se ha enviado el email, puedes ingresar nuevamente haciendo click <a href="/login">aquí</a>`)
+        } else {
+            res.send(`Usuario inexistente, puedes registrarte haciendo click  <a herf="/signIn">aquí</a>`)
+        }
+
+    } catch (error) {
+        res.send("No se pudo restablecer la contraseña")
     }
 }

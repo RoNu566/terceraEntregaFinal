@@ -1,6 +1,7 @@
 import { ProductManager } from "../config/persistance.js"
 import { ProductErrorFunction } from "../services/errorFunction.js";
 import { Logger2 } from "../Logger/logger.js";
+import productModel from "../dao/models/products.models.js";
 
 const manager = new ProductManager();
 const logger = Logger2()
@@ -35,8 +36,9 @@ export const AddProductController = async (req, res) => {
         const stock = Number(req.body.stock);
         const category = req.body.category;
         const status = true;
+        const owner = req.session._id;
 
-        const result = await manager.addProduct(title, description, price, thumbnail, code, stock, category, status);
+        const result = await manager.addProduct(title, description, price, thumbnail, code, stock, category, status, owner);
         req.io.emit("new-product", result);
         res.status(201).send("Producto agregado!!");
     } catch (e) {
@@ -63,9 +65,16 @@ export const UpdateProductController = async (req, res) => {
 export const DeleteProductByIdController = async (req, res) => {
     try {
         const { pid } = req.params
+        const product = await manager.getProductById(pid);
         const id = pid
-        await manager.deleteProduct(id)
-
+        if (product) {
+            if (req.session.rol === "premium" && product.owner == req.session._id || req.session.rol === "admin") {
+                await manager.deleteProduct(id)
+                res.send({ status: "succes", message: "Se ha eliminado el producto" })
+            } else {
+                res.send({ status: "Error", message: "No tienes autorización para eliminar el producto" })
+            }
+        }
         const products = await manager.getProducts()
         req.io.emit("delete-product", products);
         res.status(201).send("Producto eliminado")

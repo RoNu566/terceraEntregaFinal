@@ -15,6 +15,7 @@ import cartRouter from "./routes/cart.router.js";
 import viewsRouter from "./routes/views.router.js"
 import ChatManager from "./dao/db-managers/chat.manager.js";
 import authRouter from "./routes/auth.router.js";
+import usersRouter from "./routes/users.router.js";
 
 import passport from "passport";
 import { initializedPassport } from "./config/passport.config.js";
@@ -95,6 +96,7 @@ app.use("/signIn", viewsRouter);
 app.use("/api/session", authRouter);
 app.use(errorHandler)
 app.use(addLogger)
+app.use("/api/users", usersRouter);
 //-----Moongose-----//
 // Conexión a Moongose en tipo de persistencia//
 

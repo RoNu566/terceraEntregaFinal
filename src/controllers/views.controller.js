@@ -49,7 +49,8 @@ export const SignInViewController = async (req, res) => {
 }
 
 export const ForgotViewController = async (req, res) => {
-    res.render("forgot")
+    const token = req.query.token
+    res.render("forgot", { token })
 }
 
 export const loggerViewController = async (req, res) => {
@@ -60,4 +61,8 @@ export const loggerViewController = async (req, res) => {
     logger.http("prueba http")
     logger.debug("prueba debug")
     res.send("Fin de la prueba")
+}
+
+export const resendPassViewController = async (req, res) => {
+    res.render("resendpass")
 }

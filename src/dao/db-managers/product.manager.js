@@ -33,8 +33,8 @@ class ProductManager {
     }
   }
 
-  async addProduct(title, description, price, thumbnail, code, stock, category, status) {
-    const product = { title, description, price, thumbnail, code, stock, category, status }
+  async addProduct(title, description, price, thumbnail, code, stock, category, status, owner) {
+    const product = { title, description, price, thumbnail, code, stock, category, status, owner }
     const result = await productModel.create(product);
     console.log("Producto Agregado!")
     return result;

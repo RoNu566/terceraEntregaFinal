@@ -13,13 +13,13 @@ productsRouter.get("/", compression({ brotli: { enable: true, zlib: {} } }), Get
 productsRouter.get("/:pid", GetProductbyIDController);
 
 //Ruta para Aagregar productos//
-productsRouter.post("/", verifyRole(["admin"]), AddProductController);
+productsRouter.post("/", verifyRole(["admin", "premium"]), AddProductController);
 
 //Ruta para actualizar productos//
 productsRouter.put("/:pid", verifyRole(["admin"]), UpdateProductController)
 
 //Ruta para eliminar productos por id//
-productsRouter.delete("/:pid", verifyRole(["admin"]), DeleteProductByIdController)
+productsRouter.delete("/:pid", verifyRole(["admin", "premium"]), DeleteProductByIdController)
 
 export default productsRouter;
 

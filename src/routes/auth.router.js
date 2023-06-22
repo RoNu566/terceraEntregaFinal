@@ -1,5 +1,5 @@
 import { Router, json, urlencoded } from "express";
-import { PassportSignUpController, SignupRedirectController, FailureSignupController, GithubAuthController, GithubCallbackController, GithubCallbackRedirectController, LoginController, CurrentController, LogoutController, ForgotController } from "../controllers/auth.controller.js";
+import { PassportSignUpController, SignupRedirectController, FailureSignupController, GithubAuthController, GithubCallbackController, GithubCallbackRedirectController, LoginController, CurrentController, LogoutController, ForgotController, resendPassController } from "../controllers/auth.controller.js";
 
 const authRouter = Router();
 authRouter.use(json());
@@ -29,6 +29,9 @@ authRouter.post("/logout", LogoutController);
 
 //Ruta de forgot password//
 authRouter.post("/forgot", ForgotController);
+
+//Ruta email password//
+authRouter.post("/resendpass", resendPassController)
 
 export default authRouter;
 

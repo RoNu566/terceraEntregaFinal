@@ -22,7 +22,7 @@ export const PasswordErrorFunction = () => {
 
 export const CreateUserErrorFunction = (info) => {
     CustomError.createError({
-        name: "Error al crear usuarop",
+        name: "Error al crear usuario",
         cause: CreateUserError(info),
         message: "Error al crear usuario",
         errorCode: EError.INVALID_JSON
