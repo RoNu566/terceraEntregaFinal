@@ -13,14 +13,19 @@ export const GetCartController = async (req, res) => {
         let carrito = await cartManager.getCart();
         res.send(carrito);
     } catch (error) {
-        // logger.info("No se pudieron recuperar los carritos")
+        logger.info("No se pudieron recuperar los carritos")
         CartNotFoundErrorFunction();
     }
 }
 
 export const CreateCartController = async (req, res) => {
-    let carrito = await cartManager.addCart();
-    res.send(carrito);
+    try {
+        let carrito = await cartManager.addCart();
+        res.send(carrito);
+    } catch (error) {
+        res.send("Error, no se pudo crear el carrito")
+    }
+
 }
 
 export const GetCartByIdController = async (req, res) => {
