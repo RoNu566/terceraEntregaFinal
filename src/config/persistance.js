@@ -6,7 +6,8 @@ import { options } from "./options.js"
 import mongoose from "mongoose"
 
 const config = {
-    persistanceType: options.server.persistance
+    persistanceType: options.server.persistance,
+    env: options.mongoDB.ENV
 }
 
 let ProductManager, CartManager;
@@ -14,10 +15,18 @@ let ProductManager, CartManager;
 if (config.persistanceType === "DB") {
     ProductManager = DbProductManager;
     CartManager = DbCartManager;
-    try {
-        mongoose.connect(options.mongoDB.URL).then((conn) => { console.log("Conected to Db") });
-    } catch (error) {
-        console.log("error al conectarse a la base de datos")
+    if (config.env == "production") {
+        try {
+            mongoose.connect(options.mongoDB.URL).then((conn) => { console.log("Conected to Db") });
+        } catch (error) {
+            console.log("error al conectarse a la base de datos")
+        }
+    } else {
+        try {
+            mongoose.connect(options.mongoDB.TESTING).then((conn) => { console.log("Conected to test DB") });
+        } catch (error) {
+            console.log("error al conectarse a la base de prueba")
+        }
     }
 } else if (config.persistanceType === "File") {
     ProductManager = FileProductManager;

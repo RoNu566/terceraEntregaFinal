@@ -110,3 +110,4 @@ app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs))
 //-----Moongose-----//
 // Conexión a Moongose en tipo de persistencia//
 
+export { app }
