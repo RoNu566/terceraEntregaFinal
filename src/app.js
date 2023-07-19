@@ -98,10 +98,10 @@ app.use(passport.session());
 app.use("/", viewsRouter)
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartRouter);
-app.use("/products", viewsRouter);
-app.use("/login", viewsRouter);
-app.use("/profile", viewsRouter);
-app.use("/signIn", viewsRouter);
+// app.use("/products", viewsRouter);
+// app.use("/login", viewsRouter);
+// app.use("/profile", viewsRouter);
+// app.use("/signIn", viewsRouter);
 app.use("/api/session", authRouter);
 app.use(errorHandler)
 app.use(addLogger)

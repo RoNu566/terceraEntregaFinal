@@ -1,5 +1,6 @@
 import { Router, json, urlencoded } from "express";
 import { PassportSignUpController, SignupRedirectController, FailureSignupController, GithubAuthController, GithubCallbackController, GithubCallbackRedirectController, LoginController, CurrentController, LogoutController, ForgotController, resendPassController } from "../controllers/auth.controller.js";
+import { uploaderProfile } from "../utils.js";
 
 const authRouter = Router();
 authRouter.use(json());
@@ -7,7 +8,7 @@ authRouter.use(urlencoded({ extended: true }));
 
 
 //Ruta para SignIn con passport//
-authRouter.post("/signIn", PassportSignUpController, SignupRedirectController);
+authRouter.post("/signIn", uploaderProfile.single("avatar"), PassportSignUpController, SignupRedirectController);
 
 //Ruta para falla de SignIn con passport//
 authRouter.get("/failure-signup", FailureSignupController);

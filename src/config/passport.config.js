@@ -37,6 +37,7 @@ const initializedPassport = () => {
                     password: hashPassword(password),
                     rol,
                     cart: await cartToWork.addCart(),
+                    avatar: req.file.path
                 };
                 const userCreated = await usersModel.create(nuevoUsuario);
                 return done(null, userCreated);

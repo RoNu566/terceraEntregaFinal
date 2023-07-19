@@ -39,6 +39,7 @@ export const GithubCallbackRedirectController = (req, res) => {
 }
 
 export const LoginController = async (req, res) => {
+
     try {
         const { email, password } = req.body;
         if (!email || !password) {
@@ -48,14 +49,17 @@ export const LoginController = async (req, res) => {
         const user = await usersModel.findOne({ email: email });
         if (!user) {
             res.send(`No existe ese usuario, por favor registrate en nuestro sitio haciendo click <a href="/signIn">Aquí</a>`);
-        } else if (email === user.email && validatePassword(user, password)) {
+        } else if (email === user.email && validatePassword(user, password) == true) {
             req.session.user = user.name;
             req.session._id = user._id;
             req.session.email = user.email;
             req.session.rol = user.rol;
             req.session.cartid = user.cart[0]._id.toString();
+
+            user.last_connection = new Date() //actualizo last conection
+            const userUpdated = await usersModel.findByIdAndUpdate(user._id, user)//se guarda en base de datos
             console.log("usuario registrado")
-            console.log("user data", req.session)
+            console.log("user data", user)
             res.redirect("/products")
         } else {
             logger.error("Usuario y contraseña incorrecto")
@@ -74,7 +78,10 @@ export const CurrentController = (req, res) => {
     res.send("Usuario No Logueado");
 }
 
-export const LogoutController = (req, res) => {
+export const LogoutController = async (req, res) => {
+    const user = { ...req.user }
+    user.last_connection = new Date();
+    const userUpdated = await usersModel.findByIdAndUpdate(user._id, user)
     req.session.destroy(error => {
         if (error) {
             res.send("No se pudo cerrar sesion");

@@ -2,6 +2,7 @@ import { json, Router } from "express";
 import { GetProductsController, GetProductbyIDController, AddProductController, UpdateProductController, DeleteProductByIdController } from "../controllers/products.controller.js";
 import { verifyRole } from "../middlewares/auth.roles.js";
 import compression from "express-compression";
+import { uploaderProduct } from "../utils.js";
 
 const productsRouter = Router()
 productsRouter.use(json())
@@ -13,7 +14,7 @@ productsRouter.get("/", compression({ brotli: { enable: true, zlib: {} } }), Get
 productsRouter.get("/:pid", GetProductbyIDController);
 
 //Ruta para Aagregar productos//
-productsRouter.post("/", verifyRole(["admin", "premium"]), AddProductController);
+productsRouter.post("/", verifyRole(["admin", "premium"]), uploaderProduct.single("thumbnail"), AddProductController);
 
 //Ruta para actualizar productos//
 productsRouter.put("/:pid", verifyRole(["admin"]), UpdateProductController)
